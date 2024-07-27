@@ -73,6 +73,9 @@
             text-align: center;
             margin-top: 10px;
         }
+        .status.online {
+            color: green;
+        }
     </style>
 </head>
 <body>
@@ -83,7 +86,7 @@
             <input type="text" id="user-input" placeholder="Type a message...">
             <button onclick="sendMessage()">Send</button>
         </div>
-        <div id="status" class="status"></div>
+        <div id="status" class="status">Checking server status...</div>
     </div>
 
     <script>
@@ -91,8 +94,9 @@
         const userInput = document.getElementById('user-input');
         const status = document.getElementById('status');
 
-        function updateStatus(message) {
+        function updateStatus(message, isOnline) {
             status.textContent = message;
+            status.className = `status ${isOnline ? 'online' : ''}`;
         }
 
         function appendMessage(content, className) {
@@ -108,7 +112,7 @@
             if (message) {
                 appendMessage(message, 'user-message');
                 userInput.value = '';
-                
+
                 fetch('/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -119,18 +123,24 @@
                     appendMessage(data.reply, 'bot-message');
                 })
                 .catch(() => {
-                    updateStatus('Server is down or not reachable.');
+                    updateStatus('Server is down or not reachable.', false);
                 });
             }
         }
 
         function checkServer() {
-            fetch('/chat', { method: 'GET' })
-                .then(response => response.ok ? updateStatus('Server is up and running.') : updateStatus('Server is down.'))
-                .catch(() => updateStatus('Server is down or not reachable.'));
+            fetch('/status', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    updateStatus('Server is online.', true);
+                })
+                .catch(() => {
+                    updateStatus('Server is down or not reachable.', false);
+                });
         }
 
         setInterval(checkServer, 5000); // Check server status every 5 seconds
+        checkServer(); // Check server status on page load
     </script>
 </body>
 </html>
