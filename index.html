@@ -6,7 +6,7 @@
     <title>Chatbot</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
@@ -16,88 +16,121 @@
             height: 100vh;
         }
         .container {
-            width: 80%;
-            max-width: 800px;
+            width: 100%;
+            max-width: 600px;
             background: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
         }
         #chatbox {
-            flex: 1;
-            padding: 20px;
-            border-bottom: 1px solid #ddd;
+            height: 300px;
             overflow-y: auto;
-            height: 400px;
-            background: #fafafa;
-        }
-        #input {
-            border: none;
-            padding: 15px;
-            font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
-            border-top: 1px solid #ddd;
-            outline: none;
-            border-radius: 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
         }
         .message {
-            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
         }
-        .message.user {
+        .user-message {
+            background: #e1f5fe;
             text-align: right;
         }
-        .message.user span {
-            background-color: #007bff;
+        .bot-message {
+            background: #e8f5e9;
+            text-align: left;
+        }
+        input[type="text"] {
+            width: calc(100% - 60px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
             color: #fff;
-            padding: 10px;
-            border-radius: 15px;
-            display: inline-block;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
         }
-        .message.bot span {
-            background-color: #e9ecef;
-            padding: 10px;
-            border-radius: 15px;
-            display: inline-block;
+        button:hover {
+            background: #0056b3;
         }
-        .message span {
-            display: inline-block;
-            max-width: 70%;
-            word-wrap: break-word;
+        .status {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <h1>Chatbot</h1>
         <div id="chatbox"></div>
-        <input type="text" id="input" placeholder="Type your message...">
+        <div>
+            <input type="text" id="user-input" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div id="status" class="status"></div>
     </div>
+
     <script>
-        const input = document.getElementById('input');
         const chatbox = document.getElementById('chatbox');
+        const userInput = document.getElementById('user-input');
+        const status = document.getElementById('status');
 
-        input.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                const message = input.value.trim();
-                if (message) {
-                    chatbox.innerHTML += `<div class="message user"><span>${message}</span></div>`;
-                    input.value = '';
+        function updateStatus(message) {
+            status.textContent = message;
+        }
 
-                    fetch('/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: message })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        chatbox.innerHTML += `<div class="message bot"><span>${data.reply}</span></div>`;
-                        chatbox.scrollTop = chatbox.scrollHeight;
-                    });
-                }
+        function appendMessage(content, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = content;
+            messageDiv.className = `message ${className}`;
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll to the bottom
+        }
+
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message) {
+                appendMessage(message, 'user-message');
+                userInput.value = '';
+                
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    appendMessage(data.reply, 'bot-message');
+                })
+                .catch(() => {
+                    updateStatus('Server is down or not reachable.');
+                });
             }
-        });
+        }
+
+        function checkServer() {
+            fetch('/chat', { method: 'GET' })
+                .then(response => response.ok ? updateStatus('Server is up and running.') : updateStatus('Server is down.'))
+                .catch(() => updateStatus('Server is down or not reachable.'));
+        }
+
+        setInterval(checkServer, 5000); // Check server status every 5 seconds
     </script>
 </body>
 </html>
