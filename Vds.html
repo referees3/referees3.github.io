@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vídeos</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+        #video-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #controls .control-icon {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        #controls .control-icon img {
+            width: 24px;
+            height: 24px;
+        }
+        #controls .control-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        #footer-link {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+        #footer-link:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        #info-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        #info-overlay.active {
+            transform: translateX(0);
+        }
+        #info-overlay img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        #info-overlay h2 {
+            margin: 20px 0 10px;
+        }
+        #info-overlay p {
+            margin: 5px 0;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        #redirect-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+        #redirect-button:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <video id="video" autoplay muted></video>
+        <div id="controls">
+            <div class="control-icon" id="download-icon">
+                <img src="img/download.png" alt="Baixar" id="download-button">
+            </div>
+            <div class="control-icon" id="share-icon">
+                <img src="img/cptm.png" alt="Compartilhar" id="share-button">
+            </div>
+            <div class="control-icon" id="audio-icon">
+                <img src="img/aud.png" alt="img" id="audio-button">
+            </div>
+        </div>
+        <button id="redirect-button" onclick="window.location.href='z-Desenvolvedor-perfil.html'">DV</button>
+        <a id="footer-link" href="https://instagram.com/rfpds.oficial/" target="_blank">Fonte</a>
+        <div id="error-message" style="display: none;">Erro.</div>
+    </div>
+
+    <div id="info-overlay">
+        <span class="close-btn">&times;</span>
+        <img src="img/REFEREES3.jpg" alt="Desenvolvedor">
+        <h2>RfStudio</h2>
+        <p>Telefone: +55 (38)99919-4859</p>
+        <p>Email: *</p>
+        <p>Endereço: Rua 8, 358</p>
+        <p>Em desenvolvimento! couque erro ou problema entre em contato conosco!</p>
+    </div>
+
+    <script>
+        const videoElement = document.getElementById('video');
+        const audioButton = document.getElementById('audio-button');
+        const shareButton = document.getElementById('share-button');
+        const downloadButton = document.getElementById('download-button');
+        const errorMessage = document.getElementById('error-message');
+        const videoSources = [
+            'vd/1.mp4',
+            'vd/2.mp4',
+            'vd/3.mp4',
+            'vd/4.mp4',
+            'vd/5.mp4',
+            'vd/6.mp4',
+            'vd/7.mp4',
+            'vd/8.mp4',
+            'vd/9.mp4',
+            'vd/10.mp4',
+            'vd/12.mp4',
+            'vd/13.mp4',
+            'vd/14.mp4',
+            'vd/15.mp4',
+            'vd/16.mp4',
+            'vd/17.mp4',
+            'vd/18.mp4',
+            'vd/19.mp4',
+            'vd/20.mp4',
+            'vd/21.mp4',
+            'vd/22.mp4',
+            'vd/23.mp4',
+            'vd/24.mp4',
+            'vd/25.mp4',
+            'vd/26.mp4',
+            'vd/27.mp4',
+            'vd/28.mp4',
+            'vd/29.mp4',
+            'vd/30.mp4',
+            'vd/31.mp4',
+            'vd/32.mp4',
+            'vd/33.mp4',
+            'vd/34.mp4',
+            'vd/35.mp4',
+            'vd/36.mp4',
+            'vd/37.mp4',
+            'vd/38.mp4',
+            'vd/39.mp4',
+            'vd/40.mp4',
+            'vd/41.mp4',
+            'vd/42.mp4',
+            'vd/43.mp4',
+            'vd/44.mp4',
+            'vd/45.mp4',
+            'vd/46.mp4',
+            'vd/47.mp4',
+            'vd/48.mp4',
+            'vd/49.mp4',
+            'vd/50.mp4',
+            'vd/51.mp4',
+            'vd/52.mp4',
+            'vd/53.mp4',
+            'vd/54.mp4',
+            'vd/55.mp4',
+            'vd/56.mp4',
+            'vd/57.mp4',
+            'vd/58.mp4',
+            'vd/59.mp4',
+            'vd/60.mp4',
+            'vd/61.mp4',
+            'vd/62.mp4',
+            'vd/63.mp4',
+            'vd/64.mp4',
+            'vd/65.mp4',
+            'vd/66.mp4',
+            'vd/67.mp4',
+            'vd/68.mp4',
+            'vd/69.mp4',
+            'vd/70.mp4',
+            'vd/71.mp4',
+            'vd/72.mp4',
+            'vd/73.mp4',
+            'vd/74.mp4',
+            'vd/75.mp4',
+            'vd/76.mp4',
+            'vd/77.mp4',
+            'vd/78.mp4',
+            'vd/79.mp4',
+            'vd/80.mp4',
+            'vd/81.mp4',
+            'vd/82.mp4',
+            'vd/83.mp4',
+            'vd/84.mp4',
+            'vd/85.mp4',
+            'vd/86.mp4',
+            'vd/87.mp4',
+            'vd/88.mp4',
+            'vd/89.mp4',
+            'vd/90.mp4',
+            'vd/91.mp4',
+            'vd/92.mp4',
+            'vd/93.mp4',
+            'vd/94.mp4',
+            'vd/95.mp4',
+            'vd/96.mp4',
+            'vd/97.mp4',
+            'vd/98.mp4',
+            'vd/99.mp4',
+            'vd/100.mp4',
+            'vd/101.mp4',
+            'vd/102.mp4',
+            'vd/103.mp4',
+            'vd/104.mp4',
+            'vd/105.mp4',
+            'vd/106.mp4',
+            'vd/107.mp4',
+            'vd/108.mp4',
+            'vd/109.mp4',
+            'vd/110.mp4'
+        ];
+        let videoQueue = [...videoSources];
+        let currentVideoIndex = 0;
+        let isMuted = true;
+
+        const infoOverlay = document.getElementById('info-overlay');
+        const closeButton = document.querySelector('.close-btn');
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initializeVideos() {
+            shuffleArray(videoQueue);
+            currentVideoIndex = 0;
+            videoElement.src = videoQueue[currentVideoIndex];
+        }
+
+        function showInfoOverlay() {
+            infoOverlay.classList.add('active');
+        }
+
+        function hideInfoOverlay() {
+            infoOverlay.classList.remove('active');
+        }
+
+        function nextVideo() {
+            currentVideoIndex++;
+            if (currentVideoIndex >= videoQueue.length) {
+                videoQueue = [...videoSources];
+                shuffleArray(videoQueue);
+                currentVideoIndex = 0;
+            }
+            videoElement.src = videoQueue[currentVideoIndex];
+            videoElement.play().catch((error) => {
+                console.error('Erro ao reproduzir o vídeo:', error);
+                errorMessage.style.display = 'block';
+            });
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            videoElement.muted = isMuted;
+            updateAudioIcon();
+        }
+
+        function updateAudioIcon() {
+            const iconUrl = isMuted
+                ? 'https://www.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-volume-mute-circle-512.png'
+                : 'https://www.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-volume-circle-512.png';
+            audioButton.src = iconUrl;
+        }
+
+        function shareVideo() {
+            const videoUrl = encodeURIComponent(videoElement.src);
+            const shareUrl = `https://api.whatsapp.com/send?text=Assista%20a%20este%20vídeo:%20${videoUrl}`;
+
+            window.open(shareUrl, '_blank');
+        }
+
+        function downloadVideo() {
+            const videoUrl = videoElement.src;
+            const link = document.createElement('a');
+            link.href = videoUrl;
+            link.download = videoUrl.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function handleTouchStart(event) {
+            touchStartX = event.touches[0].clientX;
+            touchStartY = event.touches[0].clientY;
+        }
+
+        function handleTouchEnd(event) {
+            const touchEndX = event.changedTouches[0].clientX;
+            const touchEndY = event.changedTouches[0].clientY;
+            const deltaX = touchStartX - touchEndX;
+            const deltaY = touchStartY - touchEndY;
+
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (deltaX > 100) {
+                    nextVideo(); // Swipe left
+                } else if (deltaX < -100) {
+                    showInfoOverlay(); // Swipe right
+                }
+            }
+        }
+
+        audioButton.addEventListener('click', toggleMute);
+        shareButton.addEventListener('click', shareVideo);
+        downloadButton.addEventListener('click', downloadVideo);
+        closeButton.addEventListener('click', hideInfoOverlay);
+
+        videoElement.addEventListener('ended', nextVideo);
+
+        document.addEventListener('touchstart', handleTouchStart);
+        document.addEventListener('touchend', handleTouchEnd);
+
+        // Inicializa os vídeos
+        initializeVideos();
+        
+        alert("Clique 2 vezes no ícone de áudio para ativá-lo! Deslize o dedo do lado direito para o esquerdo para alternar entre vídeos. Em desenvolvimento! couque erro ou problema entre em contato conosco!");
+    </script>
+</body>
+</html>

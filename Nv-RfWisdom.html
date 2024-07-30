@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RfWisdom</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            background-image: url('img/12.gif'); /* URL da imagem de fundo */
+            background-size: cover;
+            background-position: center;
+            overflow-x: hidden; /* Para esconder a barra de rolagem horizontal */
+        }
+        .navbar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .navbar select {
+            padding: 8px;
+            font-size: 12px;
+            border: none;
+            background-color: #0000;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-container {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .search-button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .search-button:hover {
+            background-color: #0056b3;
+        }
+        .logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+.section {
+    background-color: #0000;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px; /* Aumenta a largura máxima das seções de notícias */
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.section iframe {
+    width: 100%;
+    height: 500px; /* Aumenta a altura dos iframes das notícias */
+    border: none;
+}
+
+
+        @media screen and (max-width: 768px) {
+            .navbar {
+                position: static;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            .navbar select {
+                margin-bottom: 10px;
+            }
+            .search-container {
+                text-align: center;
+            }
+            .search-box {
+                width: 80%;
+            }
+            .section {
+                max-width: 90%;
+                margin: 10px auto;
+            }
+            .section iframe {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <select id="searchEngine" onchange="updateFormAction()">
+            <option value="https://www.google.com/search">Google</option>
+            <option value="https://duckduckgo.com/">DuckDuckGo</option>
+            <option value="https://www.bing.com/search">Bing</option>
+            <option value="https://search.yahoo.com/search">Yahoo</option>
+            <option value="https://www.qwant.com/">Qwant</option>
+            <option value="https://searx.me/">Searx</option>
+            <option value="https://www.startpage.com/do/dsearch">Startpage</option>
+            <option value="https://www.ecosia.org/search">Ecosia</option>
+            <option value="https://www.yandex.com/">Yandex</option>
+        </select>
+    </div>
+    <div class="search-container">
+        <img src="img/nv-logo.png" alt="Logo" class="logo">
+        <form id="searchForm" action="https://www.google.com/search" method="get">
+            <input type="text" name="q" class="search-box" placeholder="Pesquisar...">
+            <button type="submit" class="search-button">Buscar</button>
+        </form>
+    </div>
+
+    <!-- Seção de Notícias -->
+    <div class="section">
+        <h2>Notícias</h2>
+        <iframe src="https://curta.news/flip" frameborder="0"></iframe>
+    </div>
+
+    <div class="section">
+        <iframe src="https://www.cnnbrasil.com.br/" frameborder="0"></iframe>
+    </div>
+
+    <div class="section">
+        <iframe src="https://g1.globo.com/" frameborder="0"></iframe>
+    </div>
+
+    <script>
+        function updateFormAction() {
+            const searchEngine = document.getElementById('searchEngine').value;
+            document.getElementById('searchForm').action = searchEngine;
+        }
+    </script>
+</body>
+</html>

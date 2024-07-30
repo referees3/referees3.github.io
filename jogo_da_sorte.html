@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo de(a) Roleta</title>
+<style>
+    /* Estilos para o modal */
+    .modal {
+        display: none; /* Por padrão, o modal está oculto */
+        position: fixed; /* Fica sobreposta a tudo */
+        z-index: 1; /* Define a ordem de empilhamento */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5); /* Fundo semi-transparente */
+        overflow: auto; /* Adiciona rolagem se necessário */
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        border-radius: 10px;
+    }
+    .modal-content p {
+        margin-bottom: 15px;
+    }
+    .modal-content button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Outros estilos do jogo */
+    body {
+        background: url('img/fundo-textura.jpg') no-repeat center center fixed; /* Textura de fundo */
+        background-size: cover;
+    }
+    .container {
+        position: relative; /* Para que o botão fique posicionado em relação a este elemento */
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8); /* Fundo semitransparente para destacar o jogo */
+        padding: 20px;
+        border-radius: 10px;
+        margin: 50px auto;
+        max-width: 600px;
+    }
+    .roleta {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        position: relative;
+        margin: 20px auto;
+        overflow: hidden; /* Oculta a parte da seta que ultrapassa a borda */
+        background: url('img/roleta-textura.jpg') no-repeat center center; /* Textura da roleta */
+        background-size: cover;
+    }
+    .seta {
+        position: absolute;
+        top: 36%; /* Ajusta a posição vertical da seta (um pouco mais para cima) */
+        left: 50%;
+        transform-origin: bottom center;
+        transform: translate(-50%, -50%) rotate(-90deg); /* Ajusta a rotação da seta para apontar para o sentido da roleta */
+        animation: girarSeta 2s linear infinite; /* Animação de rotação da seta */
+        background: url('img/seta-textura.jpg') no-repeat center center; /* Textura da seta */
+        background-size: contain; /* Ajusta o tamanho da textura para caber na seta */
+        width: 80px; /* Largura da seta */
+        height: 80px; /* Altura da seta */
+    }
+    .numero {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        font-weight: bold;
+        transform-origin: center;
+    }
+    @keyframes girarSeta {
+        0% { transform: translate(-50%, -50%) rotate(-90deg); } /* Inicia a seta no sentido da roleta */
+        100% { transform: translate(-50%, -50%) rotate(270deg); } /* Termina a seta no sentido da roleta após uma volta completa */
+    }
+    .botao-sair {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 10px 20px;
+        background-color: #f00; /* Cor de fundo do botão */
+        color: #fff; /* Cor do texto do botão */
+        text-decoration: none; /* Remove o sublinhado do link */
+        border-radius: 5px;
+    }
+    .resgate-codigo {
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        background: #ffffff; /* Cor de fundo */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    }
+    .resgate-codigo input[type="text"] {
+        width: 200px;
+        padding: 8px;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+        margin-right: 5px;
+    }
+    .resgate-codigo button {
+        padding: 8px 40px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+<div id="modalTermoUso" class="modal">
+    <div class="modal-content">
+        <h2>Termos de Uso</h2>
+        <h3>Por favor, leia atentamente os termos de uso antes de prosseguir.</h3>
+        <p>Termo 1: site em teste.</p>
+        <p>Termo 2: Seja um dos primeiros a ganhar milhões🤑👌.</p>
+        <p>Termo 3: se você esta aqui nesse site e por que o desenvolvedor, te escolheu para testa o site, ele fornece estes codigos para você poder testar código1 (100Reais) código2 (150Reais) código3 (300Reais) código4 (5Reais)</p>
+        <p style="color: red;">Caso tenha algum erro, contate a nós pelo link fornecido no site todos colaboradores ganharão Saldo bônus para interagir no jogo gratuitamente e ter a chance de ganhar sem gastar um real do bolso! (Isso vale apenas para erros bugs etc)</p>
+        <button id="btnAceitarTermos">Aceitar Termos</button>
+    </div>
+</div>
+
+<div class="container">
+    <a href="https://wa.me/5538999194859" class="botao-sair">Suporte</a> <!-- Botão com link -->
+    
+    <h1>Jogo da Roleta</h1>
+    <p style="color: red;">Site estara aberto para apostas em breve dia 01/01/2025</p>
+    <p>Dinheiro: R$ <span id="dinheiro">0</span></p> <!-- Elemento para exibir a quantidade de dinheiro -->
+    <div class="roleta">
+        <div class="seta">&#8682;</div> <!-- Setinha que gira -->
+        <div class="numero" id="numeroSorteado"></div>
+        <!-- Números ao redor da roleta -->
+        <div class="numero" style="transform: rotate(0deg) translate(0, -135px);">0</div>
+        <div class="numero" style="transform: rotate(30deg) translate(0, -135px);">32</div>
+        <div class="numero" style="transform: rotate(60deg) translate(0, -135px);">15</div>
+        <!-- Adicione os demais números aqui... -->
+    </div>
+    <br>
+    <p>Escolha um número entre 0 e 36:</p>
+    <input type="number" id="numeroApostado" min="0" max="36">
+    <br><br>
+    <p>Valor da aposta:</p>
+    <input type="number" id="valorAposta" min="1">
+    <br><br>
+    <button onclick="apostar()">Apostar</button>
+    <br><br>
+    <p id="resultado"></p>
+</div>
+
+<div class="resgate-codigo">
+    <input type="text" id="codigoResgate" placeholder="Digite o código $">
+    <button onclick="resgatarCodigo()">Resgatar</button>
+</div>
+
+<script>
+    var modalTermoUso = document.getElementById('modalTermoUso');
+    var btnAceitarTermos = document.getElementById('btnAceitarTermos');
+
+    // Exibe o modal ao carregar a página
+    window.onload = function() {
+        modalTermoUso.style.display = "block";
+    }
+
+    // Fecha o modal ao clicar no botão Aceitar Termos
+    btnAceitarTermos.onclick = function() {
+        modalTermoUso.style.display = "none";
+    }
+
+    var numerosRoleta = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+    var roletaElemento = document.querySelector('.roleta');
+    var numeroSorteadoElemento = document.getElementById('numeroSorteado');
+    var dinheiroElemento = document.getElementById('dinheiro');
+    var dinheiro = 0; // Saldo inicial do jogador
+    var codigosResgatados = []; // Array para armazenar os códigos resgatados
+    var derrotasConsecutivas = 0; // Contador de derrotas consecutivas
+
+    function girarRoleta() {
+        var numeroSorteado = numerosRoleta[Math.floor(Math.random() * numerosRoleta.length)];
+        var setaElemento = document.querySelector('.seta');
+        var resultadoElemento = document.getElementById('resultado');
+
+        // Rotação aleatória para simular a rotação da roleta
+        var rotacaoAleatoria = Math.floor(Math.random() * 360) + 3600; // De 3600 a 3959 graus (10 voltas completas)
+        
+        roletaElemento.style.transition = 'transform 4s ease-out'; // Transição para a animação da roleta
+        roletaElemento.style.transform = `rotate(${rotacaoAleatoria}deg)`; // Rotaciona a roleta
+
+        setTimeout(function() {
+            roletaElemento.style.transition = 'none'; // Remove a transição para o número aparecer instantaneamente
+            roletaElemento.style.transform = 'rotate(0deg)'; // Retorna ao estado inicial
+            numeroSorteadoElemento.textContent = numeroSorteado;
+            mostrarResultado(numeroSorteado);
+        }, 4000); // 4 segundos de espera para a roleta parar de girar
+    }
+
+    function mostrarResultado(numeroSorteado) {
+        var numeroApostado = parseInt(document.getElementById('numeroApostado').value);
+        var valorAposta = parseInt(document.getElementById('valorAposta').value);
+        var resultadoElemento = document.getElementById('resultado');
+
+        if (isNaN(numeroApostado) || isNaN(valorAposta) || numeroApostado < 0 || numeroApostado > 36 || valorAposta < 1) {
+            alert("Por favor, insira valores válidos.");
+            return;
+        }
+
+        if (valorAposta > dinheiro) {
+            alert("Você não possui saldo suficiente para essa aposta.");
+            return;
+        }
+
+        if (numeroApostado === numeroSorteado) {
+            dinheiro += valorAposta * 36; // Ganha 36 vezes o valor da aposta
+            resultadoElemento.innerHTML = `Parabéns! Você acertou o número ${numeroSorteado} e ganhou ${valorAposta * 36} reais.`;
+            derrotasConsecutivas = 0; // Reinicia o contador de derrotas consecutivas
+        } else {
+            dinheiro -= valorAposta; // Perde o valor da aposta
+            resultadoElemento.innerHTML = `Você errou. O número sorteado foi ${numeroSorteado}. Você perdeu ${valorAposta} reais. Tente novamente.`;
+            derrotasConsecutivas++; // Incrementa o contador de derrotas consecutivas
+        }
+
+        dinheiroElemento.textContent = dinheiro; // Atualiza o dinheiro do jogador na tela
+
+        // Verifica se o jogador perdeu três vezes consecutivas
+        if (derrotasConsecutivas === 4) {
+            dinheiro += 2; // Dá um bônus de 1000 reais ao jogador
+            alert("Você perdeu três vezes consecutivas. Como incentivo, você ganhou um bônus de 2 Reais! para que o dinheiro seja credibilitado em seu saldo aposte mais uma vez. continue tentando");
+            derrotasConsecutivas = 0; // Reinicia o contador de derrotas consecutivas
+        }
+    }
+   
+    function apostar() {
+        girarRoleta(); // Chama a função para girar a roleta e mostrar o resultado da aposta
+    }
+
+    function resgatarCodigo() {
+        var codigoResgate = document.getElementById('codigoResgate').value;
+        var saldoAdicional = 0;
+
+        // Verifica se o código já foi resgatado anteriormente
+        if (codigosResgatados.includes(codigoResgate)) {
+            alert("Este código já foi resgatado.");
+            return;
+        }
+
+        // Aqui você pode adicionar lógica para verificar o código e determinar o saldo adicional
+        // Por exemplo, se o código for válido, você pode adicionar um valor específico ao saldo
+        switch (codigoResgate) {
+                case "100Reais":
+                saldoAdicional = 100;
+                break;
+                case "1234":
+                saldoAdicional = 20000;
+                break;
+                case "🤑":
+                saldoAdicional = 100000000000009;
+                break;
+            // Adicione os demais códigos aqui...
+            default:
+                saldoAdicional = 0; // Código inválido
+                break;
+        }
+
+        dinheiro += saldoAdicional; // Adiciona o saldo adicional ao dinheiro do jogador
+        dinheiroElemento.textContent = dinheiro; // Atualiza o saldo exibido na tela
+
+        // Adiciona o código resgatado ao array de códigos resgatados
+        codigosResgatados.push(codigoResgate);
+
+        // Você pode adicionar uma mensagem para informar ao jogador que o código foi resgatado com sucesso
+        if (saldoAdicional > 0) {
+            alert("Código resgatado com sucesso! Seu saldo foi aumentado em " + saldoAdicional + " reais.");
+        } else {
+            alert("Código inválido.");
+        }
+    }
+</script>
+</body>
+</html>
+       
+         
+           
+         
+       
+<style>
+    #ajuda-link {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 9999;
+        background-color: #0000;
+        padding: 5px 10px;
+        border: 1px solid #0000;
+        border-radius: 5px;
+        text-decoration: none;
+        color: red;
+    }
+    #ajuda-mensagem {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 99999;
+    }
+</style>
+</head>
+<body>
+
+<a href="#" id="ajuda-link">Ajuda</a>
+
+<div id="ajuda-mensagem">
+    <h2>Ajuda</h2>
+    <p>Para fazer o saque entre em contato com o lik.</p>
+    <p>Para comprar um código, para saldo entre em contato</p>
+    <button onclick="fecharMensagem()">Fechar</button>
+</div>
+
+<script>
+    document.getElementById('ajuda-link').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('ajuda-mensagem').style.display = 'block';
+    });
+
+    function fecharMensagem() {
+        document.getElementById('ajuda-mensagem').style.display = 'none';
+    }
+     </script>
+
+
+
+
+
+
+
+
+
+<style>
+    body {
+        background-color: #f2f2f2;
+        font-family: Arial, sans-serif;
+    }
+    .login-form {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 3000px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+        width: 400px;
+    }
+    .login-form h2 {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
+        width: 90%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 3px solid #4CAF50;
+        background-color: #fff;
+    }
+    .login-form button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<div class="login-form" id="loginForm">
+    <h2>Sorte3 Login</h2>
+    <input type="text" id="username" placeholder="Usuário">
+    <input type="password" id="password" placeholder="Senha">
+    <button onclick="login()">Login</button>
+    <div style="text-align: center; margin-top: 10px;">
+        <a href="mailto:Rfpds4880@gmail.com?subject=CRIAR CONTA!!!     Rolet3&body=Nome%3D%0ANome%20de%20user%3D%0ACriar%20senha%3D%0AIdade%3D%0ATelefone%3D%2B55%20(**)*********%0AE-mail%20(opcional)%3D">Criar conta</a> |
+        <a href="mailto:Rfpds4880@gmail.com?subject=ESQUECEU A SENHA!!!     Rolet3&body=Mandaremos%20o%20c%C3%B3digo%20dentro%20de%2048h!%0AAp%C3%B3s%20o%20envio%20do%20c%C3%B3digo%20lhe%20daremos%20mais%20informa%C3%A7%C3%B5es%20de%20como%20prosseguir%20para%20recupera%C3%A7%C3%A3o!%0A%0A%0AInforme%20o%20user%20e%20n%C3%BAmero%20ou%20e-mail%20vinculado%20a%20conta%3F%20">Esqueceu a senha</a>
+    </div>
+</div>
+
+<script>
+    var usuarios = {
+        "Rafa": { "senha": "1", "mensagem": "Olá, usuário!" },
+        "adm": { "senha": "adm", "mensagem": "Olá, adm1.0! pronto para as apostas! te forneço um código único resgate esse código(1234) e se divirta-se" },
+    };
+
+    function login() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        if (usuarios[username] && usuarios[username].senha === password) {
+            alert(usuarios[username].mensagem);
+            document.getElementById('loginForm').style.display = 'none';
+        } else {
+            alert("Nome de usuário ou senha incorretos. Por favor, tente novamente.");
+        }
+    }
+</script>
+
+Sever
+<body>
+    <div id="displayData"></div>
+    
+    <script>
+        // Função para salvar todas as modificações na página
+        function salvarModificacoes() {
+            var elementos = document.querySelectorAll("*"); // Seleciona todos os elementos da página
+            var data = {};
+
+            // Itera sobre os elementos
+            elementos.forEach(function(elemento) {
+                var id = elemento.id;
+                var tag = elemento.tagName;
+                var value = elemento.value || elemento.innerHTML;
+
+                // Salva o id, a tag e o valor do elemento
+                if (id) {
+                    data[id] = { tag: tag, value: value };
+                }
+            });
+
+            // Salva os dados no armazenamento local
+            localStorage.setItem("modificacoes", JSON.stringify(data));
+        }
+
+        // Carrega os dados salvos quando a página é carregada
+        window.onload = function() {
+            var data = localStorage.getItem("modificacoes");
+            if (data) {
+                data = JSON.parse(data);
+
+                // Restaura os valores dos elementos
+                Object.keys(data).forEach(function(id) {
+                    var elemento = document.getElementById(id);
+                    if (elemento) {
+                        elemento[elemento.tagName === "INPUT" ? "value" : "innerHTML"] = data[id].value;
+                    }
+                });
+            }
+        };
+
+        // Adiciona um ouvinte de evento para capturar todas as modificações nos elementos da página
+        document.addEventListener("input", salvarModificacoes);
+    </script>
+</body>
+</html>

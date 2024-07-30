@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RfVendas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: #6200ea;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        header {
+            background-color: #6200ea;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+        .txt {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        p0 {
+            font-size: 1rem;
+            color: #ccc;
+        }
+        nav {
+            background-color: #3700b3;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav a {
+            color: #fff;
+            margin: 0 1rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        nav a:hover {
+            color: #ff6ec4;
+        }
+        /* Seção de anúncios */
+        .announcement {
+            background-color: #3700b3;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+        }
+        .announcement h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .announcement p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .image-carousel {
+            display: flex;
+            justify-content: flex-start; /* Ajusta para flex-start para rolar */
+            gap: 10px;
+            margin-top: 1rem;
+            overflow-x: auto; /* Permite rolagem horizontal */
+            white-space: nowrap; /* Mantém todas as imagens em uma linha */
+            padding-bottom: 20px; /* Adiciona espaço na parte inferior para rolagem */
+        }
+        .image-carousel img {
+            max-width: 50px; /* Tamanho reduzido das imagens */
+            height: auto;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+        .image-carousel img:hover {
+            border-color: #6200ea;
+        }
+        .main-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-top: 1rem;
+        }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+        }
+        .product {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+        .product:hover {
+            transform: translateY(-5px);
+        }
+        .product img {
+            max-width: 100%;
+            height: auto;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            cursor: pointer;
+        }
+        .product-info {
+            padding: 1rem;
+        }
+        .product-info h2 {
+            margin: 0.5rem 0;
+        }
+        .product-info h5 {
+            color: #666;
+            margin: 0.5rem 0;
+        }
+        .product-info p {
+            margin: 0.5rem 0;
+            color: #666;
+        }
+        .product-info button {
+            background-color: #6200ea;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+        .product-info button:hover {
+            background-color: #3700b3;
+        }
+        /* Modal para detalhes do produto */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            width: 80%;
+            max-width: 600px;
+            color: #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 {
+            margin: 0;
+        }
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+        }
+        /* Modal para comentários */
+        .comments-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 20px;
+        }
+        .comments-content {
+            background-color: #333;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 80%;
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .comments-content h2 {
+            margin-top: 0;
+        }
+        .comments-content p {
+            margin-bottom: 1rem;
+        }
+        .comments-close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            float: right;
+        }
+        .comments-close:hover,
+        .comments-close:focus {
+            color: #fff;
+            text-decoration: none;
+        }
+        footer {
+            background-color: #3700b3;
+            color: #fff;
+            text-align: center;
+            padding: -5rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        /* Botão de comentários */
+        .comment-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .title {
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            display: inline-block;
+            position: relative; /* Necessário para posicionar a imagem dentro do texto */
+        }
+        .title img {
+            width: 12px; /* Ajuste o tamanho conforme necessário */
+            height: 12px; /* Ajuste o tamanho conforme necessário */
+            position: absolute;
+            top: -5px; /* Ajuste a posição vertical conforme necessário */
+            right: -15px; /* Ajuste a posição horizontal conforme necessário */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="txt">Bem-vindo(a)!</div>
+        <p0>Versão: Pt-Br</p0>
+        <br>
+        <p0>Negociações entre em contato com, vendedor.</p0>
+        <div id="purchase-count"></div>
+        <span class="comment-icon" onclick="openComments()">🌐</span> <!-- Ícone para abrir comentários -->
+    </header>
+    <nav>
+        <a href="index.html">Início</a>
+        <a href="https://api.whatsapp.com/send?phone=5538999194859&text=Ol%C3%A1%2C%20oque%20deseja%20comprar%3F%20Informe%20o%20id%20do%20produto%3F">Contato</a>
+        <a href="Vendedores.html">Lojas</a>
+        <a href="Sobre-loja.html">Sobre</a>
+    </nav>
+    <section class="announcement">
+        <p>Confira nossos últimos lançamentos e novidades em produtos! Descontos de até 90%🤑!</p>
+        <div class="image-carousel">
+            <img src="img/14.jpg" alt="*" onclick="changeMainImage(this)">
+            <img src="img/16.jpg" alt="*" onclick="changeMainImage(this)">
+        </div>
+        <img id="mainImage" src="img/ttyu.gif" class="main-image" alt="Imagem principal">
+    </section>
+    <div class="products" id="productsContainer">
+
+        <div class="product" data-img="img/16.jpg" data-name="Seguidores Para redes Sociais" data-store="LOJA: #RFPDS" data-description="Venda de seguidores Curtidas<br> Para Instagram, Facebook,  Twitter,  etc..." data-id="Valor...#" data-link="https://api.whatsapp.com/send?phone=5538999194859&text=Ol%C3%A1%2C%20oque%20deseja%20comprar%3F%20Informe%20o%20id%20do%20produto%3F">
+            <img src="img/16.jpg" alt="Produto 1" onclick="showProductDetails(this.parentElement)">
+            <div class="product-info">
+                <h2>Seguidores Para redes Sociais</h2>
+               <p class="title">LOJA: #RFPDS <img src="img/verificado.png" alt="Verificado"></p>
+                <p>Venda de seguidores Curtidas etc...<br><a href="tabela-loja.html">Clique aqui</a></p>
+               <p> Valor dos produtos👆 </p>
+                <a href="tabela-loja.html"><button>Comprar</button></a>
+                <p>id: 00001</p>
+            </div>
+        </div>
+
+        <div class="product" data-img="img/1.jpg" data-name="Selos Verificado" data-store="LOJA: #RFPDS" data-description="Selos Verificado para Instagram..." data-id="R$ 10,60 Permanente" data-link="https://api.whatsapp.com/send?phone=5538999194859&text=Ol%C3%A1%2C%20oque%20deseja%20comprar%3F%20Informe%20o%20id%20do%20produto%3F">
+            <img src="img/1.jpg" alt="Produto 1" onclick="showProductDetails(this.parentElement)">
+            <div class="product-info">
+                <h2>Verificado</h2>
+               <p class="title">LOJA: #RFPDS <img src="img/verificado.png" alt="Verificado"></p>
+                <p>Selo Verificado Para...<br><a href="Aeroinsta.html">Saiba mais!</a></p>
+                <p>R$ 10,60 Permanente<br>R$ 00,30 Para teste: 1h<br>R$ 6,50 6 dias<br>R$ 4,00 3 dias<br></p>
+                
+                <a href="https://api.whatsapp.com/send?phone=5538999194859&text=Ol%C3%A1%2C%20oque%20deseja%20comprar%3F%20Informe%20o%20id%20do%20produto%3F"><button>Comprar</button></a>
+                <p>id: 00002</p>
+            </div>
+        </div>
+
+        <!-- Adicione mais produtos aqui -->
+    </div>
+    <footer>
+        <p>&copy; Loja Online</p>
+    </footer>
+    <!-- Modal de Produto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalhes do Produto</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="product-info-modal">
+                <!-- Detalhes do produto preenchidos dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Comentários -->
+    <div id="commentsModal" class="comments-modal">
+        <div class="comments-content">
+            <span class="comments-close" onclick="closeComments()">&times;</span>
+            <h2>Comentários</h2>
+            <p>Em breve: Indisponível!</p>
+        </div>
+    </div>
+
+    <script>
+        // Função para calcular o número de compras com base na data atual
+        function calculatePurchases() {
+            const initialDate = new Date('2024-07-06');
+            const today = new Date();
+            const diffTime = Math.abs(today - initialDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            let purchases = 30 * Math.pow(1.05, diffDays);
+            return Math.floor(purchases).toLocaleString('pt-BR');
+        }
+
+        // Atualiza o número de compras no elemento HTML
+        document.getElementById('purchase-count').innerText = `VS: ${calculatePurchases()}`;
+
+        // Função para alternar a imagem principal ao clicar nas imagens pequenas do carrossel
+        function changeMainImage(imgElement) {
+            var mainImage = document.getElementById('mainImage');
+            mainImage.src = imgElement.src;
+        }
+
+        // Função para exibir os detalhes do produto no modal
+        function showProductDetails(productElement) {
+            var modal = document.getElementById("productModal");
+            var productInfoModal = modal.querySelector(".product-info-modal");
+
+            var imgSrc = productElement.dataset.img;
+            var productName = productElement.dataset.name;
+            var storeInfo = productElement.dataset.store;
+            var productDescription = productElement.dataset.description;
+            var productId = productElement.dataset.id;
+            var buyLink = productElement.dataset.link;
+
+            productInfoModal.innerHTML = `
+                <img src="${imgSrc}" alt="${productName}" style="max-width: 100%; height: auto; border-radius: 10px;">
+                <h2>${productName}</h2>
+                <h5>${storeInfo}</h5>
+                <p>${productDescription}</p>
+                <a href="${buyLink}"><button>Comprar</button></a>
+                <p>${productId}</p>
+            `;
+
+            modal.style.display = "block";
+        }
+
+        // Função para fechar o modal do produto
+        function closeModal() {
+            var modal = document.getElementById("productModal");
+            modal.style.display = "none";
+        }
+
+        // Modal fecha ao clicar fora dele
+        window.onclick = function(event) {
+            var modal = document.getElementById("productModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        // Função para abrir o modal de comentários
+        function openComments() {
+            var commentsModal = document.getElementById("commentsModal");
+            commentsModal.style.display = "block";
+        }
+
+        // Função para fechar o modal de comentários
+        function closeComments() {
+            var commentsModal = document.getElementById("commentsModal");
+            commentsModal.style.display = "none";
+        }
+
+        // Função para embaralhar e exibir os produtos em ordem aleatória
+        function shuffleProducts() {
+            const productsContainer = document.getElementById('productsContainer');
+            const products = Array.from(productsContainer.children);
+            
+            // Embaralha os produtos
+            function shuffle(array) {
+                let currentIndex = array.length, randomIndex;
+                while (currentIndex !== 0) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex--;
+                    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+                }
+                return array;
+            }
+
+            const shuffledProducts = shuffle(products);
+
+            // Remove todos os produtos do container
+            productsContainer.innerHTML = '';
+
+            // Adiciona os produtos embaralhados de volta ao container
+            shuffledProducts.forEach(product => productsContainer.appendChild(product));
+        }
+
+        // Embaralha e exibe produtos ao carregar a página
+        document.addEventListener('DOMContentLoaded', shuffleProducts);
+    </script>
+
+
+
+    <style>
+      .welcome-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ffffff;
+        padding: 25px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 24px;
+        z-index: 9999;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      #close-button {
+        background-color: #ff0000;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+
+      body {
+        user-select: none;
+      }
+    </style>
+      <div class="overlay"></div>
+
+      <div class="welcome-message">
+        <h3 style="color: blue;">Bem-vindo a Infinix</h3>
+        <h6>Ao continuar você concorda com nossos Termos?<a href="Sobre-loja.html"> Clique aqui!</a></h6>
+        <button id="close-button" onclick="closeWelcomeMessage()">Concordo</button>
+      </div>
+    <script>
+        function closeWelcomeMessage() {
+            var welcomeMessage = document.querySelector(".welcome-message");
+            var overlay = document.querySelector(".overlay");
+            welcomeMessage.style.display = "none";
+            overlay.style.display = "none";
+        }
+    </script>
+
+
+
+
+</body>
+</html>

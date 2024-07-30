@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificações Personalizadas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notificações Personalizadas</h1>
+    <button onclick="requestNotificationPermission()">Pedir Permissão para Notificações</button>
+    <br>
+    <input type="text" id="notification-text" placeholder="Digite o texto da notificação">
+    <br>
+    <button onclick="sendNotification()">Enviar Notificação</button>
+
+    <script>
+        // Função para pedir permissão para enviar notificações
+        function requestNotificationPermission() {
+            if (Notification.permission === "default") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        alert("Permissão concedida para enviar notificações.");
+                    } else {
+                        alert("Permissão negada para enviar notificações.");
+                    }
+                });
+            } else if (Notification.permission === "granted") {
+                alert("Permissão já concedida.");
+            } else {
+                alert("Permissão já negada.");
+            }
+        }
+
+        // Função para enviar uma notificação com o texto do usuário
+        function sendNotification() {
+            const notificationText = document.getElementById('notification-text').value;
+
+            if (Notification.permission === "granted") {
+                if (notificationText.trim() === "") {
+                    alert("Por favor, digite o texto da notificação.");
+                } else {
+                    new Notification("Nova Notificação", {
+                        body: notificationText,
+                        icon: "https://via.placeholder.com/150" // Ícone opcional
+                    });
+                }
+            } else {
+                alert("Permissão para notificações não concedida. Solicite permissão primeiro.");
+            }
+        }
+    </script>
+</body>
+</html>

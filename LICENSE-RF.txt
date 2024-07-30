@@ -1,0 +1,58 @@
+# LICENSE-RF.txt
+
+## Licença de Uso
+
+**Nome da Empresa: [RFPDS]**
+
+### 1. Direitos de Uso
+Esta licença concede ao usuário o direito de uso do software, aplicativos, APKs, sites e outras plataformas digitais desenvolvidas por [RFPDS] para fins pessoais e comerciais, de acordo com os termos estabelecidos abaixo.
+
+### 2. Restrições
+O usuário não pode:
+1. Modificar, adaptar ou criar trabalhos derivados do software sem permissão por escrito de [RFPDS].
+2. Redistribuir, vender, alugar ou sublicenciar o software sem autorização expressa.
+3. Utilizar o software para fins ilegais ou para violar qualquer lei local, estadual, nacional ou internacional.
+4. Remover ou alterar qualquer aviso de propriedade intelectual do software.
+5. Descompilar, fazer engenharia reversa, desmontar ou reduzir de outra forma o software a uma forma perceptível ao ser humano.
+6. Utilizar o software de maneira que possa prejudicar a operação de redes, sistemas ou serviços de terceiros.
+7. Utilizar o software para desenvolver, distribuir ou acessar malware, spyware, adware ou qualquer outro software malicioso.
+8. Utilizar o software para realizar ataques cibernéticos, incluindo, mas não se limitando a, ataques de negação de serviço (DDoS), phishing ou qualquer outra atividade maliciosa.
+9. Compartilhar credenciais de acesso ao software com terceiros não autorizados.
+10. Utilizar o software para a coleta não autorizada de dados ou informações pessoais.
+11. Explorar vulnerabilidades do software para obter acesso não autorizado a sistemas, redes ou dados.
+12. Utilizar o software em ambientes de missão crítica onde falhas possam resultar em danos significativos ou perda de vidas.
+13. Utilizar o software para comprometer a segurança de sistemas de terceiros, incluindo, mas não se limitando a, invasões, fraudes ou roubo de identidade.
+14. Utilizar o software para violar a privacidade de indivíduos, incluindo, mas não se limitando a, gravação de conversas sem consentimento ou espionagem eletrônica.
+15. Utilizar o software de maneira que possa expor informações sensíveis ou confidenciais a riscos de segurança cibernética.
+
+### 3. Propriedade Intelectual
+O software, incluindo aplicativos, APKs, sites e outras plataformas digitais, é propriedade exclusiva de [RFPDS]. Todos os direitos não expressamente concedidos ao usuário são reservados por [RFPDS]. O usuário não adquire nenhum direito sobre o software além dos direitos de uso limitados e não exclusivos concedidos por esta licença.
+
+### 4. Limitação de Responsabilidade
+O software é fornecido "como está", sem garantias de qualquer tipo, expressas ou implícitas, incluindo, mas não se limitando a, garantias de comercialização, adequação a um propósito específico e não violação. Em nenhuma hipótese [RFPDS] será responsável por quaisquer danos diretos, indiretos, incidentais, especiais ou consequenciais decorrentes do uso ou da impossibilidade de uso do software, incluindo, mas não se limitando a, perda de lucros, interrupção de negócios, perda de dados ou danos materiais, mesmo que [RFPDS] tenha sido avisada da possibilidade de tais danos. [RFPDS] não se responsabiliza por qualquer uso ilegal ou não autorizado do software.
+
+### 5. Conteúdos Maliciosos ou Pornográficos
+[RFPDS] não endossa, apoia ou é responsável por quaisquer conteúdos maliciosos, pornográficos ou ofensivos que possam ser encontrados em plataformas de terceiros. É responsabilidade do usuário garantir que o uso do software seja conforme às normas éticas e legais.
+
+### 6. Autenticidade das Vendas
+Toda venda realizada por [RFPDS] será autenticada com nosso selo oficial e documentação apropriada para evitar fraudes. O usuário deve verificar a presença deste selo e documentação antes de concluir qualquer transação.
+
+### 7. Suporte e Atualizações
+[RFPDS] não se compromete a fornecer suporte técnico ou atualizações para o software, a menos que especificado em um contrato separado. Qualquer suporte ou atualização fornecido será fornecido a critério exclusivo de [RFPDS].
+
+### 8. Segurança e Vulnerabilidades
+O usuário reconhece que o software pode conter vulnerabilidades de segurança e que nenhuma tecnologia é completamente segura. [RFPDS] não garante que o software estará livre de vulnerabilidades ou ataques de segurança. O usuário é responsável por implementar medidas de segurança apropriadas para proteger seus sistemas e dados. [RFPDS] não será responsável por quaisquer danos decorrentes de vulnerabilidades ou falhas de segurança no software.
+
+### 9. Termo de Vigência
+Esta licença é válida até ser terminada. [RFPDS] pode rescindir esta licença se o usuário violar qualquer um dos termos e condições aqui contidos. Após a rescisão, o usuário deve interromper todo uso do software e destruir todas as cópias, completas ou parciais.
+
+### 10. Descontos por Falhas de Atendimento
+Se um atendente de [RFPDS] esquecer dos termos ou regras estabelecidas nesta licença, o usuário poderá lembrá-lo e terá direito a um desconto de 5% a 10%, dependendo do objeto ou serviço, conforme documento de [RFPDS].
+
+### 11. Aceitação dos Termos
+Ao utilizar o software, o usuário concorda com os termos desta licença.
+
+---
+
+@RFPDS --- RfStudio
+[Data de Emissão da Licença/ 03/04/2023]

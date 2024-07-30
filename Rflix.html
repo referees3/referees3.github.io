@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rfplay</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e1e2f, #2d2d4f);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+        h5 {
+          color: red;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            text-align: center;
+        }
+        .search-bar input {
+            width: 50%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            transition: transform 0.3s;
+        }
+        .search-bar input:focus {
+            transform: scale(1.05);
+        }
+        .search-bar h1 {
+          color: red;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            width: 80%;
+            margin: 20px 0;
+            padding: 20px;
+        }
+        .block {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .block img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px 10px 0 0;
+            transition: transform 0.3s;
+        }
+        .block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+        }
+        .block-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            text-align: center;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        .block:hover .block-content {
+            transform: translateY(0);
+        }
+        .block-content h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #fff;
+        }
+        .menu {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        .menu-toggle {
+            color: red;
+            cursor: pointer;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .menu-options {
+            display: none;
+            position: absolute;
+            top: 35px;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        .menu-options a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px;
+            display: block;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+        .menu-options a:hover {
+            opacity: 0.7;
+        }
+        .footer {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            padding: 10px 0;
+            position: absolute;
+            bottom: 0;
+        }
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="menu-toggle" id="menuToggle">Menu &#9776;</div>
+        <div class="menu-options" id="menuOptions">
+            <a href="#">beta</a>
+        </div>
+    </div>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Procurar...">
+        <h1>Riflix filmes e séries</h1>
+    </div>
+  <h5>Atualizações em breve!</h5>
+    <div class="container" id="blockContainer">
+      
+        <div class="block" data-url="https://pobreflix.nu/">
+            <img src="img/105.jpg" alt="Imagem Bloco 1">
+            <div class="block-content">
+                <h3>Pobreflix</h3>
+            </div>
+            <p>Pobreflix</p>
+        </div>
+        
+        <div class="block" data-url="https://supercinetv.site/filmes/">
+            <img src="img/106.jpg" alt="Imagem Bloco 2">
+            <div class="block-content">
+                <h3>Super cine tv</h3>
+            </div>
+            <p>Super cine tv</p>
+        </div>
+        
+        <div class="block" data-url="https://zonaflix.net/filmes/">
+            <img src="img/107.jpg" alt="Imagem Bloco 3">
+            <div class="block-content">
+                <h3>Zonaflix</h3>
+            </div>
+            <p>Zonaflix</p>
+        </div>
+        
+        <div class="block" data-url="https://hypeflix.to/">
+            <img src="img/108.jpg" alt="Imagem Bloco 4">
+            <div class="block-content">
+                <h3>Hypeflix</h3>
+            </div>
+            <p>Hypeflix</p>
+        </div>
+        
+    </div>
+    <p class="no-results" id="noResultsMessage" style="display: none;">Nenhum resultado encontrado.</p>
+
+    <div class="footer">
+        <p>&copy; Atualizado 2024</p>
+    </div>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const menuOptions = document.getElementById('menuOptions');
+
+        menuToggle.addEventListener('click', function() {
+            menuOptions.style.display = menuOptions.style.display === 'block' ? 'none' : 'block';
+        });
+
+        const blocks = document.querySelectorAll('.block');
+        const searchInput = document.getElementById('searchInput');
+        const blockContainer = document.getElementById('blockContainer');
+        const noResultsMessage = document.getElementById('noResultsMessage');
+
+        searchInput.addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+
+            blocks.forEach(block => {
+                const blockContent = block.querySelector('.block-content h3').textContent.toLowerCase();
+                const isMatching = blockContent.includes(searchText);
+
+                if (searchText === '' || isMatching) {
+                    block.style.display = 'block';
+                } else {
+                    block.style.display = 'none';
+                }
+            });
+
+            const visibleBlocks = Array.from(blocks).filter(block => block.style.display !== 'none');
+            if (visibleBlocks.length === 0) {
+                noResultsMessage.style.display = 'block';
+            } else {
+                noResultsMessage.style.display = 'none';
+            }
+        });
+
+        blocks.forEach(block => {
+            block.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                window.location.href = url;
+            });
+        });
+    </script>
+</body>
+</html>
